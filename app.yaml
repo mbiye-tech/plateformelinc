@@ -1,0 +1,62 @@
+runtime: php81
+api_version: '1.0'
+env: standard
+threadsafe: true
+env_variables:
+  APP_DEBUG: 'True'
+  APP_ENV: production
+  APP_KEY: base64:IJoTuBv4hZ048XKW+Ss/mGBEEtmN0p4MI3zHDaJLAvg=
+  APP_LOG: daily
+  APP_STORAGE: /tmp
+  VIEW_COMPILED_PATH: /tmp
+  APP_TIMEZONE: UTC
+  CACHE_DRIVER: lincdb
+  DB_CONNECTION: mysql
+  SESSION_DRIVER: lincdb
+  DB_DATABASE: lincdb
+  DB_HOST: 127.0.0.1
+  DB_PASSWORD: linc@2023
+  DB_PORT: '3306'
+  DB_SOCKET: /cloudsql/appdeploy-402517:us-central1:lincbd
+  DB_USERNAME: root
+  GOOGLE_VISION_PROJECT_ID: appdeploy-402517
+  LOG_DELETE: 'True'
+  MAIL_DRIVER: smtps
+  MAIL_HOST: smtp.sparkpostmail.com
+  MAIL_PASSWORD: None
+  MAIL_PORT: '587'
+  MAIL_USERNAME: sparkpost_username
+  QUEUE_DRIVER: lincdb
+
+  PUSHER_APP_ID : 
+  PUSHER_APP_KEY : 
+  PUSHER_APP_SECRET : 
+  PUSHER_APP_CLUSTER : mt1
+
+  APP_SERVICES_CACHE : /tmp/services.php 
+  APP_PACKAGES_CACHE : /tmp/packages.php 
+  APP_CONFIG_CACHE : /tmp/config.php 
+  APP_ROUTES_CACHE : /tmp/routes.php
+
+automatic_scaling:
+  cool_down_period: 120s
+  min_num_instances: 1
+  max_num_instances: 10
+  cpu_utilization:
+    target_utilization: 0.5
+liveness_check:
+  initial_delay_sec: '300'
+  check_interval_sec: '30'
+  timeout_sec: '4'
+  failure_threshold: 4
+  success_threshold: 2
+readiness_check:
+  check_interval_sec: '5'
+  timeout_sec: '4'
+  failure_threshold: 2
+  success_threshold: 2
+  app_start_timeout_sec: '300'
+service_account: https://lingplateforme-4tr2pltbuq-nn.a.run.app
+
+beta_settings:
+cloud_sql_instances: appdeploy-402517:us-central1:lincbd
