@@ -8,7 +8,7 @@ skip_files:
 
 env_variables:
   DB_CONNECTION: mysql
-  DB_HOST: localhost # Utilisez le chemin de connexion Cloud SQL
+  DB_HOST: 34.29.228.88 # Utilisez le chemin de connexion Cloud SQL
   DB_DATABASE: lincd
   DB_USERNAME: phpmyadmin
   DB_PASSWORD: linc@2023
