@@ -3,7 +3,7 @@ env: flex
 
 runtime_config:
   document_root: public
-skip_files: 
+skip_files:
     - .env
 
 env_variables:
@@ -12,4 +12,3 @@ env_variables:
   DB_DATABASE: lincd
   DB_USERNAME: phpmyadmin
   DB_PASSWORD: linc@2023
-  DB_SOCKET: "appdeploy-402517:us-central1:plateforme"  # Spécifiez le socket pour Cloud SQL
