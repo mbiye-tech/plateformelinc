@@ -1,8 +1,13 @@
 runtime: php82
+env: flex
+
 runtime_config:
-  document_root: gcp-php-mysql
+  document_root: public
+
 env_variables:
-  MYSQL_HOST: mysql:unix_socket=/cloudsql/appdeploy-402517:us-central1:lincbd
-  MYSQL_DB: lincdb
-  MYSQL_USER: root
-  MYSQL_PASS: linc@2023
+  DB_CONNECTION: mysql
+  DB_HOST: /cloudsql/appdeploy-402517:us-central1:lincdb  # Utilisez le chemin de connexion Cloud SQL
+  DB_DATABASE: lincdb
+  DB_USERNAME: root
+  DB_PASSWORD: linc@2023
+  DB_SOCKET: "/cloudsql/appdeploy-402517:us-central1:lincdb"  # Spécifiez le socket pour Cloud SQL
