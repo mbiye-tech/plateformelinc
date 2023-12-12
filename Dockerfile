@@ -15,6 +15,6 @@ RUN sh -c "wget http://getcomposer.org/composer.phar && chmod a+x composer.phar 
 CMD sh /app/docker/startup.sh
 
 
-#RUN chown -R www-data: /app
+RUN chown -R www-data: /app
 
 
