@@ -10,4 +10,4 @@ env_variables:
   DB_DATABASE: lincd
   DB_USERNAME: phpmyadmin
   DB_PASSWORD: linc@2023
-  DB_SOCKET: "/cloudsql/appdeploy-402517:us-central1:lincdb"  # Spécifiez le socket pour Cloud SQL
+  DB_SOCKET: "appdeploy-402517:us-central1:plateforme"  # Spécifiez le socket pour Cloud SQL
