@@ -20,8 +20,6 @@ use Twilio\Rest\Api\V2010\Account\Call\PaymentList;
 use Twilio\Rest\Api\V2010\Account\Call\RecordingList;
 use Twilio\Rest\Api\V2010\Account\Call\SiprecList;
 use Twilio\Rest\Api\V2010\Account\Call\StreamList;
-use Twilio\Rest\Api\V2010\Account\Call\UserDefinedMessageList;
-use Twilio\Rest\Api\V2010\Account\Call\UserDefinedMessageSubscriptionList;
 use Twilio\Values;
 use Twilio\Version;
 
@@ -61,8 +59,6 @@ class CallInstance extends InstanceResource {
     protected $_payments;
     protected $_siprec;
     protected $_streams;
-    protected $_userDefinedMessageSubscriptions;
-    protected $_userDefinedMessages;
 
     /**
      * Initialize the CallInstance
@@ -204,20 +200,6 @@ class CallInstance extends InstanceResource {
      */
     protected function getStreams(): StreamList {
         return $this->proxy()->streams;
-    }
-
-    /**
-     * Access the userDefinedMessageSubscriptions
-     */
-    protected function getUserDefinedMessageSubscriptions(): UserDefinedMessageSubscriptionList {
-        return $this->proxy()->userDefinedMessageSubscriptions;
-    }
-
-    /**
-     * Access the userDefinedMessages
-     */
-    protected function getUserDefinedMessages(): UserDefinedMessageList {
-        return $this->proxy()->userDefinedMessages;
     }
 
     /**

@@ -2,7 +2,6 @@
 
 namespace Mollie\Api\Resources;
 
-use Generator;
 use Mollie\Api\MollieApiClient;
 
 abstract class CursorCollection extends BaseCollection
@@ -15,7 +14,7 @@ abstract class CursorCollection extends BaseCollection
     /**
      * @param MollieApiClient $client
      * @param int $count
-     * @param \stdClass|null $_links
+     * @param \stdClass $_links
      */
     final public function __construct(MollieApiClient $client, $count, $_links)
     {
@@ -93,33 +92,5 @@ abstract class CursorCollection extends BaseCollection
     public function hasPrevious()
     {
         return isset($this->_links->previous->href);
-    }
-
-    /**
-     * Iterate over a CursorCollection and yield its elements.
-     *
-     * @param bool $iterateBackwards
-     *
-     * @return LazyCollection
-     */
-    public function getAutoIterator(bool $iterateBackwards = false): LazyCollection
-    {
-        $page = $this;
-
-        return new LazyCollection(function () use ($page, $iterateBackwards): Generator {
-            while (true) {
-                foreach ($page as $item) {
-                    yield $item;
-                }
-
-                if (($iterateBackwards && ! $page->hasPrevious()) || ! $page->hasNext()) {
-                    break;
-                }
-
-                $page = $iterateBackwards
-                    ? $page->previous()
-                    : $page->next();
-            }
-        });
     }
 }

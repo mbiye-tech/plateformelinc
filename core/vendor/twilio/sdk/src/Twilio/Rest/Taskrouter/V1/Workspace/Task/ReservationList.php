@@ -95,7 +95,6 @@ class ReservationList extends ListResource {
 
         $params = Values::of([
             'ReservationStatus' => $options['reservationStatus'],
-            'WorkerSid' => $options['workerSid'],
             'PageToken' => $pageToken,
             'Page' => $pageNumber,
             'PageSize' => $pageSize,

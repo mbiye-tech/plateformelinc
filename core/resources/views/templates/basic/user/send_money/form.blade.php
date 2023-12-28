@@ -40,7 +40,7 @@
                                             </span>
                                         </div>
                                     </div>
-                                    <div class="mb-3">
+                                   <div class="mb-3">
                                         <label for="you-send"
                                             class="text--accent sm-text d-block fw-md mb-2">@lang('Recipient Gets')</label>
                                         <div class="input-group">
@@ -71,6 +71,7 @@
                                         </div>
                                     </div>
 
+
                                 </div>
                             </div>
 
@@ -80,12 +81,6 @@
                                 </div>
                             </div>
                             
-    
-                                
-                       
-
-
-
 
                             <div class="mb-3 mt-4">
                                 <div class="border-line-area mt-3">
@@ -161,10 +156,7 @@
                     
 
                     
-                <div class="row">
-  
-                    
-                     
+                     <div class="row">
                             
                          <div class="col-sm-6 col-xl-6 ">
                                 <label for="mobile" class="form-label sm-text t-heading-font heading-clr fw-md">@lang('Mobile')</label>
@@ -218,14 +210,7 @@
                     </div>
                     
                     
-                    
-                                   
-                                   
-                                   
-                                
-
-
-                                <!--    <div class="mb-3">
+                                <!--<div class="mb-3">
                                         <label for="recipient_name"
                                             class="text--accent sm-text d-block fw-md mb-2">@lang('Recipient Name')</label>
                                         <input id="recipient_name" type="text" class="form-control form--control"
@@ -424,6 +409,9 @@
                                                 </h6>
                                             </div>
                                         </li>
+                                        
+                                   
+                                        
                                         <li>
                                             <div class="d-flex align-items-center justify-content-between">
                                                 <span class="d-block t-heading-font heading-clr sm-text">
@@ -435,7 +423,8 @@
                                                 </h5>
                                             </div>
                                         </li>
-                                        <li>
+                                        
+                                      <!--  <li>
                                             <div class="d-flex align-items-center justify-content-between">
                                                 <span class="d-block sm-text">
                                                     @lang('In '){{ __($general->cur_text) }}
@@ -445,7 +434,8 @@
                                                     <span>{{ __($general->cur_text) }}</span>
                                                 </h5>
                                             </div>
-                                        </li>
+                                        </li> -->
+                                        
                                     </ul>
                                 </div>
 
@@ -570,8 +560,14 @@
                     recipientAmount = 0;
                     return 0
                 }
-                return (((fixedCharge * 1) + ((recipientAmount * percentCharge) / 100)) * (sendingRate / recipientRate))
-                    .toFixed(2);
+               
+                //return (((recipientAmount * 0.055 + 0.50) - ((percentCharge) / 100)) + 0.05) .toFixed(2);
+                    
+                //return (((fixedCharge * 1) + ((recipientAmount * percentCharge) / 100)) * (sendingRate / recipientRate)).toFixed(2);
+                
+                return (((recipientAmount * 0.055 + 0.50) - ((percentCharge) / 100)) + 0.049) .toFixed(2);
+                
+
             }
 
             function resetValues() {

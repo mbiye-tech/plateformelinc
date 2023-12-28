@@ -5,11 +5,14 @@ namespace App\Http\Controllers\User;
 use App\Http\Controllers\Controller;
 use App\Lib\ProcessSendMoney;
 use App\Models\Country;
+use App\Models\Deposit;
 use App\Models\GatewayCurrency;
 use App\Models\SendingPurpose;
 use App\Models\SendMoney;
 use App\Models\SourceOfFund;
 use Illuminate\Http\Request;
+use App\Service\TransactionService;
+use App\Http\Controllers\Gateway\PaymentController;
 
 class UserSendMoneyController extends Controller
 {
@@ -35,9 +38,9 @@ class UserSendMoneyController extends Controller
             $sendingCountry   = $countries->where('name', $countryName)->first()->id ?? $countries->first()->id;
         }
 
-        if (!$recipientCountry) {
+      /*  if (!$recipientCountry) {
             $recipientCountry = $countries->where('id', '!=', $sendingCountry)->first()->id;
-        }
+        } */
 
         $sendingAmount      = @$sessionData['sending_amount'];
         $recipientAmount    = @$sessionData['recipient_amount'];
@@ -132,6 +135,7 @@ class UserSendMoneyController extends Controller
         $pageTitle = 'Pay Money';
         $trx       = session()->get('payment_trx');
         $sendMoney = SendMoney::filterUser()->where('trx', $trx)->first();
+        
         if (!$sendMoney) {
             $notify[] = ['error', 'Session invalidate'];
             return to_route('user.home')->withNotify($notify);
@@ -153,12 +157,24 @@ class UserSendMoneyController extends Controller
     /*
      * Transfer History
      */
-    public function history()
+    public function history(Request $request)
     {
+        $notify = [];
+        if(isset($request->message) && $request->success == "error"){
+            $notify[] = ['error', $request->message];
+            $track = session()->get('track');
+            $data  = Deposit::with('gateway')->where('status', 0)->where('trx', $track)->orderBy('id', 'desc')->first();
+            PaymentController::userDataUpdate($data);
+            $request->session()->forget('track');
+            
+        }
         $pageTitle    = 'Send Money History';
         $emptyMessage = 'No transfers found';
         $transfers    = SendMoney::filterUser()->latest()->paginate(getPaginate());
-
+        
+        if($request->success == "error"){
+            return view($this->activeTemplate . 'user.send_money.history', compact('pageTitle', 'emptyMessage', 'transfers'))->withNotify($notify);
+        }
         return view($this->activeTemplate . 'user.send_money.history', compact('pageTitle', 'emptyMessage', 'transfers'));
     }
 }

@@ -10,5 +10,4 @@ composer.phar
 vendor/*
 composer.lock
 /.metadata/
-.idea
-/.phpunit.result.cache
+/.metadata/

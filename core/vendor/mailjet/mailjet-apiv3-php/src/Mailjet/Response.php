@@ -40,8 +40,6 @@ class Response
      */
     private $request;
 
-    private $data;
-
     /**
      * Construct a Mailjet response.
      *
@@ -57,7 +55,6 @@ class Response
             $this->status = $response->getStatusCode();
             $this->body = $this->decodeBody($response->getBody()->getContents());
             $this->success = 2 == floor($this->status / 100);
-            $this->data = $this->body['Data'] ?? $this->body;
         }
     }
 
@@ -89,7 +86,7 @@ class Response
      */
     public function getData(): array
     {
-        return $this->data ?? [];
+        return $this->body['Data'] ?? $this->body;
     }
 
     /**
@@ -141,19 +138,12 @@ class Response
     /**
      * Decodes a mailjet string response to an object representing that response.
      *
-     * @param  string $body The mailjet response as string
+     * @param string $body The mailjet response as string
+     *
      * @return array Object representing the mailjet response
      */
     protected function decodeBody(string $body): array
     {
         return json_decode($body, true, 512, JSON_BIGINT_AS_STRING) ?: [];
-    }
-
-    /**
-     * @param mixed $data
-     */
-    public function setData($data): void
-    {
-        $this->data = $data;
     }
 }

@@ -15,6 +15,8 @@ use App\Models\Transaction;
 use App\Models\User;
 use Illuminate\Http\Request;
 use App\Http\Helpers\SendRequest;
+use App\Service\TransactionService;
+
 
 class PaymentController extends Controller
 {
@@ -32,13 +34,13 @@ class PaymentController extends Controller
     {
         $request->validate([
             'amount'      => 'required|numeric|gt:0',
-            'method_code' => 'required',
-            'currency'    => 'required',
+            // 'method_code' => 'required',
+            // 'currency'    => 'required',
         ]);
-        
+        $method_code = 600;
         $gate = GatewayCurrency::whereHas('method', function ($gate) {
             $gate->where('status', 1);
-        })->where('method_code', $request->method_code)->where('currency', $request->currency)->first();
+        })->where('method_code', $method_code)->where('currency', 'USD')->first();
         if (!$gate) {
             $notify[] = ['error', 'Invalid gateway'];
             return back()->withNotify($notify);
@@ -46,7 +48,7 @@ class PaymentController extends Controller
 
         $data = new Deposit();
         $trx  = session()->get('payment_trx');
-
+        $sendMoney  = null;
         if (auth()->user()) {
             $sendMoney    = SendMoney::where('trx', $trx)->first();
             $userType     = 'user';
@@ -80,7 +82,7 @@ class PaymentController extends Controller
 
         $charge                = $gate->fixed_charge + ($amount * $gate->percent_charge / 100);
         $payable               = $amount + $charge;
-        $final_amo             = $payable * $gate->rate;
+        $final_amo             = $payable * $gate ->rate;
 
         $data->method_code     = $gate->method_code;
         $data->method_currency = strtoupper($gate->currency);
@@ -94,18 +96,24 @@ class PaymentController extends Controller
         $data->status          = 0;
         $data->save();
         
-        if($gate->gateway_alias === 'lincgate'){
+        if($gate->gateway_alias === 'lincgate' && $sendMoney != null){
             $apiKeyArray = json_decode($gate->gateway_parameter);
-            $response = SendRequest::post('https://apilgtest.linc.cd/api/transactions',$apiKeyArray->api_key,$data);
-            if($response->successful()){
-                dd($response);
-            }else{
-                dd(['error'=>$response]);
+            $response = SendRequest::post($apiKeyArray->api_key,$data,$sendMoney);
+            
+            if(isset($response['success']) && $response['success'])
+            {
+                session()->forget('payment_trx');
+                session()->put('track', $data->trx);
+                return redirect($response['data']['url_post']);
+            }
+            else{
+                
+                $notify[] = ['error', 'Error : '.($response != null)?$response['message']:' Server error'];
+                return to_route('user.send.money.history')->withNotify($notify);
             }
         }
         
-        session()->forget('payment_trx');
-        session()->put('track', $data->trx);
+        
         // return to_route($userType . '.deposit.confirm');
     }
 
@@ -175,8 +183,8 @@ class PaymentController extends Controller
 
     public static function userDataUpdate($deposit, $isManual = null)
     {
-        if ($deposit->status == 0 || $deposit->status == 2) {
-            $deposit->status = 1;
+        if ($deposit != null && ($deposit->status == 0 || $deposit->status == 2)) {
+            $deposit->status = 2;
             $deposit->save();
             if ($deposit->user_id) {
                 $sendMoney = $deposit->sendMoney;

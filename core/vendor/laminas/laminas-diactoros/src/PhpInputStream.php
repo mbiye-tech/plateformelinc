@@ -4,18 +4,22 @@ declare(strict_types=1);
 
 namespace Laminas\Diactoros;
 
-use Stringable;
-
 use function stream_get_contents;
 
 /**
  * Caching version of php://input
  */
-class PhpInputStream extends Stream implements Stringable
+class PhpInputStream extends Stream
 {
-    private string $cache = '';
+    /**
+     * @var string
+     */
+    private $cache = '';
 
-    private bool $reachedEof = false;
+    /**
+     * @var bool
+     */
+    private $reachedEof = false;
 
     /**
      * @param  string|resource $stream
@@ -28,7 +32,7 @@ class PhpInputStream extends Stream implements Stringable
     /**
      * {@inheritdoc}
      */
-    public function __toString(): string
+    public function __toString() : string
     {
         if ($this->reachedEof) {
             return $this->cache;
@@ -41,7 +45,7 @@ class PhpInputStream extends Stream implements Stringable
     /**
      * {@inheritdoc}
      */
-    public function isWritable(): bool
+    public function isWritable() : bool
     {
         return false;
     }
@@ -49,7 +53,7 @@ class PhpInputStream extends Stream implements Stringable
     /**
      * {@inheritdoc}
      */
-    public function read($length): string
+    public function read($length) : string
     {
         $content = parent::read($length);
         if (! $this->reachedEof) {
@@ -66,7 +70,7 @@ class PhpInputStream extends Stream implements Stringable
     /**
      * {@inheritdoc}
      */
-    public function getContents($maxLength = -1): string
+    public function getContents($maxLength = -1) : string
     {
         if ($this->reachedEof) {
             return $this->cache;

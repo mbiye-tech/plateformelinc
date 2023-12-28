@@ -135,14 +135,11 @@ class StreamHandler extends AbstractProcessingHandler
             $this->createDir($url);
             $this->errorMessage = null;
             set_error_handler([$this, 'customErrorHandler']);
-            try {
-                $stream = fopen($url, 'a');
-                if ($this->filePermission !== null) {
-                    @chmod($url, $this->filePermission);
-                }
-            } finally {
-                restore_error_handler();
+            $stream = fopen($url, 'a');
+            if ($this->filePermission !== null) {
+                @chmod($url, $this->filePermission);
             }
+            restore_error_handler();
             if (!is_resource($stream)) {
                 $this->stream = null;
 
@@ -215,7 +212,7 @@ class StreamHandler extends AbstractProcessingHandler
             set_error_handler([$this, 'customErrorHandler']);
             $status = mkdir($dir, 0777, true);
             restore_error_handler();
-            if (false === $status && !is_dir($dir) && strpos((string) $this->errorMessage, 'File exists') === false) {
+            if (false === $status && !is_dir($dir)) {
                 throw new \UnexpectedValueException(sprintf('There is no existing directory at "%s" and it could not be created: '.$this->errorMessage, $dir));
             }
         }

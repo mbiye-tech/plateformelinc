@@ -16,7 +16,10 @@
                                 </h5>
                             </div>
                             <div class="card-body">
-                                <div class="form-group">
+                                
+                                <!--Option pour selectionner un moyen de paiement-->
+                               
+                              <!-- <div class="form-group">
                                     <label class="d-block sm-text mb-2 required ">@lang('Select Gateway')</label>
                                     <div class="form--select-light">
                                         <select class="form-select form--select" name="gateway" required>
@@ -26,7 +29,9 @@
                                             @endforeach
                                         </select>
                                     </div>
-                                </div>
+                                </div> -->
+                                
+                                
                                 <div class="mt-3 preview-details d-nonee">
                                     <ul class="list-group list-group-flush text-center">
                                         
@@ -36,74 +41,58 @@
                                                 {{ $sendMoney->sending_currency }}</span>
                                         </li>
                                         
-                                   
-                                        
-                                        
                                               @php 
                                               
                                               $fraispayer = 0.055 + 0.50;
                                               
-                                              
                                               @endphp
-                                              
-
                                         
                                      <li class="list-group-item px-0 d-flex justify-content-between">
                                             <span class="fw-bold">@lang('Frais à Payer')</span>
                                             <span class="fw-bold">{{ showAmount($sendMoney->sending_amount * 0.055 + 0.50 ) }}
                                                 {{ $sendMoney->sending_currency }}</span>
-                                        </li>
+                                    </li>
                                             
-                                     
-                                            <li class="list-group-item px-0 d-flex justify-content-between">
+                                           <!-- <li class="list-group-item px-0 d-flex justify-content-between">
                                             <span class="fw-bold">@lang('Montant à recevoir')</span>
                                             <span class="fw-bold">{{ showAmount($sendMoney->recipient_amount) }} 
                                                 {{ $sendMoney->sending_currency }}</span>
-                                             </li> 
+                                             </li> -->
                                         
-                                    
-
-                                           
                                       <li class="list-group-item px-0 d-flex justify-content-between">
                                             <span class="fw-bold">@lang('Taxes')</span>
                                             <span class="fw-bold">{{ showAmount($sendMoney->sending_amount * 0.16 ) }}
                                                 {{ $sendMoney->sending_currency }}</span>
-                                        </li>
+                                      </li>
                                         
                                                                                    
-                                     <!--<li class="list-group-item px-0 d-flex justify-content-between">
+                                    <!--<li class="list-group-item px-0 d-flex justify-content-between">
                                             <span class="fw-bold">@lang('Final payment amount')</span>
                                             <span class="fw-bold">{{ showAmount($sendMoney->sending_amount + $sendMoney->sending_charge) }}
                                                 {{ $sendMoney->sending_currency }}</span>
-                                        </li> -->  
+                                    </li> -->  
                                            
                                        
                                         
-                                        <li class="list-group-item px-0 d-flex justify-content-between">
+                                    <!-- <li class="list-group-item px-0 d-flex justify-content-between">
                                             <span class="fw-bold">@lang('Taux de change')</span>
                                             <span class="fw-bold">
                                                 {{ $sendMoney->sending_currency }}</span>
-                                           </li>
+                                    </li> -->
                                         
                                         
-                                        
-                                          <li class="list-group-item px-0 d-flex d-none payable-data justify-content-between">
+                                    <li class="list-group-item px-0 d-flex d-none payable-data justify-content-between">
                                             <span class="fw-bold">@lang('Bénéficiaire')</span> <span class="fw-bold">
                                                 
                                                 {{ $sendMoney->recipient->name }}
-                                          </span>
-                                        </li>
+                                    </span>
+                                    </li>
                                     
-                    
-                                        
-                                        <li class="list-group-item px-0 d-flex d-none payable-data justify-content-between">
+                                    <!-- <li class="list-group-item px-0 d-flex d-none payable-data justify-content-between">
                                             <span class="fw-bold">@lang('Pays de destination')</span> <span class="fw-bold">
                                                {{ $sendMoney->recipient_country }} 
                                           </span>
-                                        </li>
-                                        
-                                        
-                                      
+                                    </li> -->
                                         
                                         <li class="list-group-item px-0 justify-content-between d-none rate-element">
 

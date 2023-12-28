@@ -40,16 +40,10 @@ class RequestValidator {
         // sort the array by keys
         \ksort($data);
 
+        // append them to the data string in order
+        // with no delimiters
         foreach ($data as $key => $value) {
-            // convert a single value to an array or remove any duplicates
-            $valueArray = \is_array($value) ? \array_unique($value) : array($value);
-            // also sort all the values
-            \sort($valueArray);
-
-            // append them to the data string with no delimiters
-            foreach ($valueArray as $item) {
-                $url .= $key . $item;
-            }
+            $url .= $key . $value;
         }
 
         // sha1 then base64 the url to the auth token and return the base64-ed string
@@ -170,3 +164,4 @@ class RequestValidator {
         return \implode('', $parts);
     }
 }
+

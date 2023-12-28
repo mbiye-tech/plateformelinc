@@ -6,7 +6,6 @@ use Mollie\Api\Exceptions\ApiException;
 use Mollie\Api\Resources\Order;
 use Mollie\Api\Resources\OrderLine;
 use Mollie\Api\Resources\OrderLineCollection;
-use Mollie\Api\Resources\ResourceFactory;
 
 class OrderLineEndpoint extends CollectionEndpointAbstract
 {
@@ -15,7 +14,7 @@ class OrderLineEndpoint extends CollectionEndpointAbstract
     /**
      * @var string
      */
-    public const RESOURCE_ID_PREFIX = 'odl_';
+    const RESOURCE_ID_PREFIX = 'odl_';
 
     /**
      * Get the object that is used by this API endpoint. Every API endpoint uses one
@@ -64,32 +63,6 @@ class OrderLineEndpoint extends CollectionEndpointAbstract
         }
 
         return parent::rest_update($orderlineId, $data);
-    }
-
-    /**
-     * @param string $orderId
-     * @param array $operations
-     * @param array $parameters
-     * @return Order|\Mollie\Api\Resources\BaseResource
-     * @throws \Mollie\Api\Exceptions\ApiException
-     */
-    public function updateMultiple(string $orderId, array $operations, array $parameters = [])
-    {
-        if (empty($orderId)) {
-            throw new ApiException("Invalid resource id.");
-        }
-
-        $this->parentId = $orderId;
-
-        $parameters['operations'] = $operations;
-
-        $result = $this->client->performHttpCall(
-            self::REST_UPDATE,
-            "{$this->getResourcePath()}",
-            $this->parseRequestBody($parameters)
-        );
-
-        return ResourceFactory::createFromApiResult($result, new Order($this->client));
     }
 
     /**

@@ -27,10 +27,8 @@
  * @license     Berkeley Software Distribution License (BSD-License 2) http://www.opensource.org/licenses/bsd-license.php
  * @author      Mollie B.V. <info@mollie.com>
  * @copyright   Mollie B.V.
- *
  * @link        https://www.mollie.com
  */
-
 namespace Mollie\Laravel\Facades;
 
 use Illuminate\Support\Facades\Facade;

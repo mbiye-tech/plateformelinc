@@ -11,13 +11,6 @@ namespace Mollie\Api\Resources;
 class Chargeback extends BaseResource
 {
     /**
-     * Always 'chargeback'
-     *
-     * @var string
-     */
-    public $resource;
-
-    /**
      * Id of the payment method.
      *
      * @var string

@@ -13,7 +13,6 @@ use Twilio\Deserialize;
 use Twilio\Exceptions\TwilioException;
 use Twilio\InstanceResource;
 use Twilio\Options;
-use Twilio\Rest\Video\V1\Room\Participant\AnonymizeList;
 use Twilio\Rest\Video\V1\Room\Participant\PublishedTrackList;
 use Twilio\Rest\Video\V1\Room\Participant\SubscribeRulesList;
 use Twilio\Rest\Video\V1\Room\Participant\SubscribedTrackList;
@@ -38,7 +37,6 @@ class ParticipantInstance extends InstanceResource {
     protected $_publishedTracks;
     protected $_subscribedTracks;
     protected $_subscribeRules;
-    protected $_anonymize;
 
     /**
      * Initialize the ParticipantInstance
@@ -128,13 +126,6 @@ class ParticipantInstance extends InstanceResource {
      */
     protected function getSubscribeRules(): SubscribeRulesList {
         return $this->proxy()->subscribeRules;
-    }
-
-    /**
-     * Access the anonymize
-     */
-    protected function getAnonymize(): AnonymizeList {
-        return $this->proxy()->anonymize;
     }
 
     /**

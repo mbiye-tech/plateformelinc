@@ -14,7 +14,6 @@ use Twilio\Exceptions\TwilioException;
 use Twilio\InstanceResource;
 use Twilio\Options;
 use Twilio\Rest\Supersim\V1\Sim\BillingPeriodList;
-use Twilio\Rest\Supersim\V1\Sim\SimIpAddressList;
 use Twilio\Values;
 use Twilio\Version;
 
@@ -34,7 +33,6 @@ use Twilio\Version;
  */
 class SimInstance extends InstanceResource {
     protected $_billingPeriods;
-    protected $_simIpAddresses;
 
     /**
      * Initialize the SimInstance
@@ -103,13 +101,6 @@ class SimInstance extends InstanceResource {
      */
     protected function getBillingPeriods(): BillingPeriodList {
         return $this->proxy()->billingPeriods;
-    }
-
-    /**
-     * Access the simIpAddresses
-     */
-    protected function getSimIpAddresses(): SimIpAddressList {
-        return $this->proxy()->simIpAddresses;
     }
 
     /**

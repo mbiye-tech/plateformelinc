@@ -3,7 +3,6 @@
 namespace Mollie\Api\Endpoints;
 
 use Mollie\Api\Exceptions\ApiException;
-use Mollie\Api\Resources\LazyCollection;
 use Mollie\Api\Resources\Payment;
 use Mollie\Api\Resources\PaymentCollection;
 use Mollie\Api\Resources\Refund;
@@ -16,7 +15,7 @@ class PaymentEndpoint extends CollectionEndpointAbstract
     /**
      * @var string
      */
-    public const RESOURCE_ID_PREFIX = 'tr_';
+    const RESOURCE_ID_PREFIX = 'tr_';
 
     /**
      * @return Payment
@@ -67,7 +66,7 @@ class PaymentEndpoint extends CollectionEndpointAbstract
     public function update($paymentId, array $data = [])
     {
         if (empty($paymentId) || strpos($paymentId, self::RESOURCE_ID_PREFIX) !== 0) {
-            throw new ApiException("Invalid payment ID: '{$paymentId}'. A payment ID should start with '" . self::RESOURCE_ID_PREFIX . "'.");
+            throw new ApiException("Invalid payment ID: '{$paymentId}'. A payment ID should start with '".self::RESOURCE_ID_PREFIX."'.");
         }
 
         return parent::rest_update($paymentId, $data);
@@ -86,7 +85,7 @@ class PaymentEndpoint extends CollectionEndpointAbstract
     public function get($paymentId, array $parameters = [])
     {
         if (empty($paymentId) || strpos($paymentId, self::RESOURCE_ID_PREFIX) !== 0) {
-            throw new ApiException("Invalid payment ID: '{$paymentId}'. A payment ID should start with '" . self::RESOURCE_ID_PREFIX . "'.");
+            throw new ApiException("Invalid payment ID: '{$paymentId}'. A payment ID should start with '".self::RESOURCE_ID_PREFIX."'.");
         }
 
         return parent::rest_read($paymentId, $parameters);
@@ -142,21 +141,6 @@ class PaymentEndpoint extends CollectionEndpointAbstract
     }
 
     /**
-     * Create an iterator for iterating over payments retrieved from Mollie.
-     *
-     * @param string $from The first resource ID you want to include in your list.
-     * @param int $limit
-     * @param array $parameters
-     * @param bool $iterateBackwards Set to true for reverse order iteration (default is false).
-     *
-     * @return LazyCollection
-     */
-    public function iterator(?string $from = null, ?int $limit = null, array $parameters = [], bool $iterateBackwards = false): LazyCollection
-    {
-        return $this->rest_iterator($from, $limit, $parameters, $iterateBackwards);
-    }
-
-    /**
      * Issue a refund for the given payment.
      *
      * The $data parameter may either be an array of endpoint parameters, a float value to
@@ -173,7 +157,7 @@ class PaymentEndpoint extends CollectionEndpointAbstract
         $resource = "{$this->getResourcePath()}/" . urlencode($payment->id) . "/refunds";
 
         $body = null;
-        if (($data === null ? 0 : count($data)) > 0) {
+        if (count($data) > 0) {
             $body = json_encode($data);
         }
 

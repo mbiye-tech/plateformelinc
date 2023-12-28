@@ -2,7 +2,6 @@
 
 namespace Illuminate\Support;
 
-use ArgumentCountError;
 use ArrayAccess;
 use Illuminate\Support\Traits\Macroable;
 use InvalidArgumentException;
@@ -459,7 +458,7 @@ class Arr
      * Key an associative array by a field or using a callback.
      *
      * @param  array  $array
-     * @param  callable|array|string  $keyBy
+     * @param  callable|array|string
      * @return array
      */
     public static function keyBy($array, $keyBy)
@@ -556,11 +555,7 @@ class Arr
     {
         $keys = array_keys($array);
 
-        try {
-            $items = array_map($callback, $array, $keys);
-        } catch (ArgumentCountError) {
-            $items = array_map($callback, $array);
-        }
+        $items = array_map($callback, $array, $keys);
 
         return array_combine($keys, $items);
     }
@@ -588,7 +583,7 @@ class Arr
      * Get a value from the array, and remove it.
      *
      * @param  array  $array
-     * @param  string|int  $key
+     * @param  string  $key
      * @param  mixed  $default
      * @return mixed
      */
@@ -617,7 +612,7 @@ class Arr
      *
      * @param  array  $array
      * @param  int|null  $number
-     * @param  bool  $preserveKeys
+     * @param  bool|false  $preserveKeys
      * @return mixed
      *
      * @throws \InvalidArgumentException
@@ -732,18 +727,6 @@ class Arr
     }
 
     /**
-     * Sort the array in descending order using the given callback or "dot" notation.
-     *
-     * @param  array  $array
-     * @param  callable|array|string|null  $callback
-     * @return array
-     */
-    public static function sortDesc($array, $callback = null)
-    {
-        return Collection::make($array)->sortByDesc($callback)->all();
-    }
-
-    /**
      * Recursively sort an array by keys and values.
      *
      * @param  array  $array
@@ -796,29 +779,6 @@ class Arr
     }
 
     /**
-     * Conditionally compile styles from an array into a style list.
-     *
-     * @param  array  $array
-     * @return string
-     */
-    public static function toCssStyles($array)
-    {
-        $styleList = static::wrap($array);
-
-        $styles = [];
-
-        foreach ($styleList as $class => $constraint) {
-            if (is_numeric($class)) {
-                $styles[] = Str::finish($constraint, ';');
-            } elseif ($constraint) {
-                $styles[] = Str::finish($class, ';');
-            }
-        }
-
-        return implode(' ', $styles);
-    }
-
-    /**
      * Filter the array using the given callback.
      *
      * @param  array  $array
@@ -838,7 +798,9 @@ class Arr
      */
     public static function whereNotNull($array)
     {
-        return static::where($array, fn ($value) => ! is_null($value));
+        return static::where($array, function ($value) {
+            return ! is_null($value);
+        });
     }
 
     /**

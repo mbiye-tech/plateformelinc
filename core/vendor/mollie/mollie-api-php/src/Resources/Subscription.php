@@ -10,6 +10,11 @@ class Subscription extends BaseResource
     /**
      * @var string
      */
+    public $resource;
+
+    /**
+     * @var string
+     */
     public $id;
 
     /**
@@ -96,7 +101,7 @@ class Subscription extends BaseResource
      * @var \stdClass|null
      */
     public $webhookUrl;
-
+    
     /**
      * Date the next subscription payment will take place. For example: 2018-04-24
      *
@@ -110,7 +115,7 @@ class Subscription extends BaseResource
     public $_links;
 
     /**
-     * @return Subscription
+     * @return BaseResource|Subscription
      * @throws \Mollie\Api\Exceptions\ApiException
      */
     public function update()

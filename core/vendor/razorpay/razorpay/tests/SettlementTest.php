@@ -80,9 +80,9 @@ class SettlementTest extends TestCase
     /**
      * Fetch all on-demand settlements
      */
-    public function testFetchAllOndemandSettlement()
+    public function TestFetchAllOndemandSettlement()
     {
-        $data = $this->api->settlement->fetchAllOndemandSettlement();
+        $data = $api->settlement->fetchAllOndemandSettlement();
 
         $this->assertTrue(is_array($data->toArray()));
 
@@ -92,9 +92,9 @@ class SettlementTest extends TestCase
     /**
      * Fetch on-demand settlement by ID
      */
-    public function testFetchAllOndemandSettlementById()
+    public function TestFetchAllOndemandSettlementById()
     {
-        $data = $this->api->settlement->fetch($this->settlementId)->TestFetchAllOndemandSettlementById();
+        $data = $api->settlement->fetch($this->settlementId)->TestFetchAllOndemandSettlementById();
 
         $this->assertTrue(is_array($data->toArray()));
 

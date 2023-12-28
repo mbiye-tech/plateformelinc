@@ -53,8 +53,6 @@ class MessageList extends ListResource {
             'DateUpdated' => Serialize::iso8601DateTime($options['dateUpdated']),
             'Attributes' => $options['attributes'],
             'MediaSid' => $options['mediaSid'],
-            'ContentSid' => $options['contentSid'],
-            'ContentVariables' => $options['contentVariables'],
         ]);
         $headers = Values::of(['X-Twilio-Webhook-Enabled' => $options['xTwilioWebhookEnabled'], ]);
 

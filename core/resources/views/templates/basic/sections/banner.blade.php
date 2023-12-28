@@ -57,8 +57,11 @@ $countries = App\Models\Country::active()->get();
                                                 </select>
                                             </div>
                                         </div>
-                                        <div class="col-12">
-                                            <label for="you-get" class="text--accent sm-text d-block fw-md mb-2">@lang('Recipient Gets')</label>
+                                       
+                                       <div class="col-12">
+                                            <label for="you-get" class="text--accent sm-text d-block fw-md mb-2">déstinateur reçoit</label>
+                                           <!-- <label for="you-get" class="text--accent sm-text d-block fw-md mb-2">@lang('Recipient Gets')</label>-->
+
                                             <div class="input-group recipient-parent">
                                                 <input id="to" type="number" step="any" class="form-control form--control recipient-amount" placeholder="@lang('enter amount')" name="recipient_amount" required>
                                                 <select class="recipient-countries country-picker" name="recipient_country" id="recipient-country" required>
@@ -78,6 +81,8 @@ $countries = App\Models\Country::active()->get();
                                                 </select>
                                             </div>
                                         </div>
+                                        
+                                        
                                         <div class="col-12 charge-section">
                                             <ul class="list list--column timeline-list">
                                                 <li class="list__item timeline-list__item">
@@ -217,7 +222,13 @@ $countries = App\Models\Country::active()->get();
                     recipientAmount = 0;
                     return 0
                 }
-                return (((fixedCharge * 1) + ((recipientAmount * percentCharge) / 100)) * (sendingRate / recipientRate)).toFixed(2);
+                
+               //* 0.055 + 0.50 return (((fixedCharge * 1) + ((recipientAmount * percentCharge) / 100)) * (sendingRate / recipientRate )).toFixed(2);
+                
+               // return (((fixedCharge * 1) + ((recipientAmount) / 100)) * ( 0.055 + 0.50)).toFixed(2);
+
+                return (((recipientAmount * 0.055 + 0.50) - ((percentCharge) / 100)) + 0.049) .toFixed(2);
+
             }
 
             function resetValues() {

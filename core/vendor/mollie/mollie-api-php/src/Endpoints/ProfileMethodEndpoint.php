@@ -40,7 +40,7 @@ class ProfileMethodEndpoint extends CollectionEndpointAbstract
      * @param string $profileId
      * @param string $methodId
      * @param array $data
-     * @return \Mollie\Api\Resources\Method
+     * @return \Mollie\Api\Resources\BaseResource
      * @throws \Mollie\Api\Exceptions\ApiException
      */
     public function createForId($profileId, $methodId, array $data = [])
@@ -77,7 +77,7 @@ class ProfileMethodEndpoint extends CollectionEndpointAbstract
      *
      * @param string $methodId
      * @param array $data
-     * @return \Mollie\Api\Resources\Method
+     * @return \Mollie\Api\Resources\BaseResource
      * @throws \Mollie\Api\Exceptions\ApiException
      */
     public function createForCurrentProfile($methodId, array $data = [])
@@ -91,7 +91,7 @@ class ProfileMethodEndpoint extends CollectionEndpointAbstract
      * @param string $profileId
      * @param string $methodId
      * @param array $data
-     * @return mixed
+     * @return \Mollie\Api\Resources\BaseResource
      * @throws \Mollie\Api\Exceptions\ApiException
      */
     public function deleteForId($profileId, $methodId, array $data = [])
@@ -104,9 +104,10 @@ class ProfileMethodEndpoint extends CollectionEndpointAbstract
     /**
      * Disable a method for the provided Profile object.
      *
-     * @param Profile $profile
+     * @param \stdClass $profile
      * @param string $methodId
      * @param array $data
+     * @return \Mollie\Api\Resources\BaseResource
      * @throws \Mollie\Api\Exceptions\ApiException
      */
     public function deleteFor($profile, $methodId, array $data = [])
@@ -119,7 +120,7 @@ class ProfileMethodEndpoint extends CollectionEndpointAbstract
      *
      * @param string $methodId
      * @param array $data
-     * @return \Mollie\Api\Resources\Method
+     * @return \Mollie\Api\Resources\BaseResource
      * @throws \Mollie\Api\Exceptions\ApiException
      */
     public function deleteForCurrentProfile($methodId, array $data)

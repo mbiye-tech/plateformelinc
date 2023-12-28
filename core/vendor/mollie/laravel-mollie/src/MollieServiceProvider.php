@@ -27,10 +27,8 @@
  * @license     Berkeley Software Distribution License (BSD-License 2) http://www.opensource.org/licenses/bsd-license.php
  * @author      Mollie B.V. <info@mollie.com>
  * @copyright   Mollie B.V.
- *
  * @link        https://www.mollie.com
  */
-
 namespace Mollie\Laravel;
 
 use Illuminate\Contracts\Container\Container;
@@ -45,7 +43,7 @@ use Mollie\Laravel\Wrappers\MollieApiWrapper;
  */
 class MollieServiceProvider extends ServiceProvider
 {
-    const PACKAGE_VERSION = '2.25.0';
+    const PACKAGE_VERSION = '2.19.0';
 
     /**
      * Boot the service provider.
@@ -65,7 +63,7 @@ class MollieServiceProvider extends ServiceProvider
      */
     protected function setupConfig()
     {
-        $source = realpath(__DIR__.'/../config/mollie.php');
+        $source = realpath(__DIR__ . '/../config/mollie.php');
 
         // Check if the application is a Laravel OR Lumen instance to properly merge the configuration file.
         if ($this->app instanceof LaravelApplication && $this->app->runningInConsole()) {
@@ -131,8 +129,7 @@ class MollieServiceProvider extends ServiceProvider
     protected function registerApiClient()
     {
         $this->app->singleton('mollie.api.client', function () {
-            return (new MollieApiClient(new MollieLaravelHttpClientAdapter))
-                ->addVersionString('MollieLaravel/'.self::PACKAGE_VERSION);
+            return (new MollieApiClient())->addVersionString('MollieLaravel/' . self::PACKAGE_VERSION);
         });
 
         $this->app->alias('mollie.api.client', MollieApiClient::class);
