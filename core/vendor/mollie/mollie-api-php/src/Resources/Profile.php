@@ -11,11 +11,6 @@ class Profile extends BaseResource
     /**
      * @var string
      */
-    public $resource;
-
-    /**
-     * @var string
-     */
     public $id;
 
     /**
@@ -109,7 +104,7 @@ class Profile extends BaseResource
     }
 
     /**
-     * @return \Mollie\Api\Resources\BaseResource|\Mollie\Api\Resources\Profile
+     * @return \Mollie\Api\Resources\Profile
      * @throws ApiException
      */
     public function update()

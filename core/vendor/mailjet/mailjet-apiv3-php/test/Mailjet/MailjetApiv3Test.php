@@ -30,17 +30,23 @@ final class MailjetApiv3Test extends TestCase
 
         $this->assertUrl('/REST/contact', $client->get(Resources::$Contact));
 
-        $this->assertFilters(['id' => 2], $client->get(Resources::$Contact, [
-            'filters' => ['id' => 2],
-        ], ['version' => 'v3.1']));
+        $this->assertFilters(
+            ['id' => 2], $client->get(
+                Resources::$Contact, [
+                'filters' => ['id' => 2],
+                ], ['version' => 'v3.1']
+            )
+        );
 
         $response = $client->get(Resources::$ContactGetcontactslists, ['id' => 2]);
         $this->assertUrl('/REST/contact/2/getcontactslists', $response);
 
         // error on sort !
-        $response = $client->get(Resources::$Contact, [
+        $response = $client->get(
+            Resources::$Contact, [
             'filters' => ['sort' => 'email+DESC'],
-        ]);
+            ]
+        );
 
         $this->assertUrl('/REST/contact', $response);
 
@@ -102,7 +108,7 @@ final class MailjetApiv3Test extends TestCase
 
     public function testPostV31()
     {
-        $client = new Client($this->publicKey, $this->secretKey, false);
+        $client = new Client($this->publicKey, $this->secretKey, false, ['version' => 'v3.1']);
 
         $email = [
             'Messages' => [[
@@ -112,7 +118,7 @@ final class MailjetApiv3Test extends TestCase
             ]],
         ];
 
-        $ret = $client->post(Resources::$Email, ['body' => $email], ['version' => 'v3.1']);
+        $ret = $client->post(Resources::$Email, ['body' => $email], ['timeout' => 1]);
         $this->assertUrl('/send', $ret, 'v3.1');
         $this->assertPayload($email, $ret);
         $this->assertHttpMethod('POST', $ret);

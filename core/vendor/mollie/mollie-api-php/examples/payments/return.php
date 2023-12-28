@@ -15,11 +15,24 @@ require_once "../functions.php";
 $status = database_read($_GET["order_id"]);
 
 /*
+ * The order status is normally updated by the webhook.
+ * In case the webhook did not yet arrive, we can poll the API synchronously.
+ */
+
+if ($status !== "paid") {
+    $payment = $mollie->payments->get($_GET["order_id"]);
+    $status = $payment->status;
+    /*
+     * Optionally, update the database here, or wait for the webhook to arrive.
+     */
+}
+
+/*
  * Determine the url parts to these example files.
  */
 $protocol = isset($_SERVER['HTTPS']) && strcasecmp('off', $_SERVER['HTTPS']) !== 0 ? "https" : "http";
 $hostname = $_SERVER['HTTP_HOST'];
-$path = dirname(isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : $_SERVER['PHP_SELF']);
+$path = dirname($_SERVER['REQUEST_URI'] ?? $_SERVER['PHP_SELF']);
 
 echo "<p>Your payment status is '" . htmlspecialchars($status) . "'.</p>";
 echo "<p>";
