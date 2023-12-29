@@ -8,7 +8,7 @@ RUN docker-php-ext-install pdo_mysql
 
 RUN mkdir -p /app
 COPY . /app
-COPY ./core /app
+COPY ./linc /app
 
 RUN sh -c "wget http://getcomposer.org/composer.phar && chmod a+x composer.phar && mv composer.phar /usr/local/bin/composer"
 
