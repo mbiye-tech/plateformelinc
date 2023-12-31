@@ -5,7 +5,7 @@ $countries = App\Models\Country::active()->get();
 
 		<!--/ End Slider Area -->
 		
-<section class="hero" style="background-image: url('{{ getImage(assets/images/img/back.jpg) }}')">
+<section class="hero" >
     <div class="hero__content">
         <div class="container">
             <div class="row gy-5 g-lg-4 align-items-center justify-content-center justify-content-lg-between">
