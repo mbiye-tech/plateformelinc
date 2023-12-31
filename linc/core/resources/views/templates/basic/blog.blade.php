@@ -451,10 +451,6 @@
     <!-- ======= Services Section ======= -->
    
    
-   
-
-
-
     <!-- ======= Details Section ======= -->
     <section id="details" class="details">
       <div class="container">
@@ -465,9 +461,7 @@
           </div>
           <div class="col-md-8 pt-4" data-aos="fade-up">
             <h3>Pourquoi les gens nous choisissent pour le transfert d'argent</h3>
-            <p class="fst-italic">
-Moins cher que votre banque.
-            </p>
+            <p class="fst-italic">Moins cher que votre banque. </p>
             <ul>
               <li><i class="bi bi-check"></i> Nous offrons des meilleurs taux de change</li>
               <li><i class="bi bi-check"></i>  des frais moins élevés que la plupart des banques</li>
