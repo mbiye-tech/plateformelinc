@@ -17,7 +17,6 @@
     <link rel="stylesheet" href="{{ asset($activeTemplateTrue . 'css/lib/odometer-theme-default.css') }}" />
     <link rel="stylesheet" href="{{ asset($activeTemplateTrue . 'css/lib/magnific-popup.css') }}" />
     <link rel="stylesheet" href="{{ asset($activeTemplateTrue . 'css/main.css') }}" />
-    <link rel="stylesheet" href="{{ asset('assets/templates/basic/css/main.css') }}" />
     <link rel="stylesheet" href="{{ asset($activeTemplateTrue . 'css/custom.css') }}" />
     <link rel="stylesheet"
         href="{{ asset($activeTemplateTrue . 'css/color.php') }}?color={{ $general->base_color }}" />
