@@ -82,15 +82,14 @@ class Entity extends Resource implements ArrayableInterface
      * @param string $relativeUrl
      * @param array  $data
      * @param array  $additionHeader
-     * @param string $apiVersion
      *
      * @return Entity
      */
-    protected function request($method, $relativeUrl, $data = null, $apiVersion = "v1")
+    protected function request($method, $relativeUrl, $data = null)
     {
         $request = new Request();
 
-        $response = $request->request($method, $relativeUrl, $data, $apiVersion);
+        $response = $request->request($method, $relativeUrl, $data);
 
         if ((isset($response['entity'])) and ($response['entity'] == $this->getEntity()))
         {
@@ -230,17 +229,5 @@ class Entity extends Resource implements ArrayableInterface
         }
 
         return $array;
-    }
-
-    public function setFile($attributes)
-    {
-        if(isset($attributes['file'])){
-            $attributes['file'] = new \CURLFILE(
-                $attributes['file'],
-                mime_content_type($attributes['file'])
-            );
-        }
-
-        return $attributes;   
     }
 }

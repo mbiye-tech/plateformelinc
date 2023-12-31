@@ -19,6 +19,7 @@ use Twilio\Version;
  * PLEASE NOTE that this class contains preview products that are subject to change. Use them with caution. If you currently do not have developer preview access, please contact help@twilio.com.
  *
  * @property string $accountSid
+ * @property int $bitrate
  * @property \DateTime $dateCreated
  * @property \DateTime $dateUpdated
  * @property int $duration
@@ -28,7 +29,7 @@ use Twilio\Version;
  * @property string $resolution
  * @property string $sourceSid
  * @property string $sid
- * @property string $mediaSize
+ * @property string $size
  * @property string $status
  * @property string $statusCallback
  * @property string $statusCallbackMethod
@@ -48,6 +49,7 @@ class MediaRecordingInstance extends InstanceResource {
         // Marshaled Properties
         $this->properties = [
             'accountSid' => Values::array_get($payload, 'account_sid'),
+            'bitrate' => Values::array_get($payload, 'bitrate'),
             'dateCreated' => Deserialize::dateTime(Values::array_get($payload, 'date_created')),
             'dateUpdated' => Deserialize::dateTime(Values::array_get($payload, 'date_updated')),
             'duration' => Values::array_get($payload, 'duration'),
@@ -57,7 +59,7 @@ class MediaRecordingInstance extends InstanceResource {
             'resolution' => Values::array_get($payload, 'resolution'),
             'sourceSid' => Values::array_get($payload, 'source_sid'),
             'sid' => Values::array_get($payload, 'sid'),
-            'mediaSize' => Values::array_get($payload, 'media_size'),
+            'size' => Values::array_get($payload, 'size'),
             'status' => Values::array_get($payload, 'status'),
             'statusCallback' => Values::array_get($payload, 'status_callback'),
             'statusCallbackMethod' => Values::array_get($payload, 'status_callback_method'),

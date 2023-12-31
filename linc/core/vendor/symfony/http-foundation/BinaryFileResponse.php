@@ -34,11 +34,10 @@ class BinaryFileResponse extends Response
     protected $offset = 0;
     protected $maxlen = -1;
     protected $deleteFileAfterSend = false;
-    protected $chunkSize = 16 * 1024;
 
     /**
      * @param \SplFileInfo|string $file               The file to stream
-     * @param int                 $status             The response status code (200 "OK" by default)
+     * @param int                 $status             The response status code
      * @param array               $headers            An array of response headers
      * @param bool                $public             Files are public by default
      * @param string|null         $contentDisposition The type of Content-Disposition to set automatically with the filename
@@ -103,29 +102,13 @@ class BinaryFileResponse extends Response
     }
 
     /**
-     * Sets the response stream chunk size.
-     *
-     * @return $this
-     */
-    public function setChunkSize(int $chunkSize): static
-    {
-        if ($chunkSize < 1 || $chunkSize > \PHP_INT_MAX) {
-            throw new \LogicException('The chunk size of a BinaryFileResponse cannot be less than 1 or greater than PHP_INT_MAX.');
-        }
-
-        $this->chunkSize = $chunkSize;
-
-        return $this;
-    }
-
-    /**
      * Automatically sets the Last-Modified header according the file modification date.
      *
      * @return $this
      */
     public function setAutoLastModified(): static
     {
-        $this->setLastModified(\DateTimeImmutable::createFromFormat('U', $this->file->getMTime()));
+        $this->setLastModified(\DateTime::createFromFormat('U', $this->file->getMTime()));
 
         return $this;
     }
@@ -177,21 +160,20 @@ class BinaryFileResponse extends Response
         return $this;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function prepare(Request $request): static
     {
-        if ($this->isInformational() || $this->isEmpty()) {
-            parent::prepare($request);
-
-            $this->maxlen = 0;
-
-            return $this;
-        }
-
         if (!$this->headers->has('Content-Type')) {
             $this->headers->set('Content-Type', $this->file->getMimeType() ?: 'application/octet-stream');
         }
 
-        parent::prepare($request);
+        if ('HTTP/1.0' !== $request->server->get('SERVER_PROTOCOL')) {
+            $this->setProtocolVersion('1.1');
+        }
+
+        $this->ensureIEOverSSLCompatibility($request);
 
         $this->offset = 0;
         $this->maxlen = -1;
@@ -199,7 +181,6 @@ class BinaryFileResponse extends Response
         if (false === $fileSize = $this->file->getSize()) {
             return $this;
         }
-        $this->headers->remove('Transfer-Encoding');
         $this->headers->set('Content-Length', $fileSize);
 
         if (!$this->headers->has('Accept-Ranges')) {
@@ -240,7 +221,7 @@ class BinaryFileResponse extends Response
                 $range = $request->headers->get('Range');
 
                 if (str_starts_with($range, 'bytes=')) {
-                    [$start, $end] = explode('-', substr($range, 6), 2) + [1 => 0];
+                    [$start, $end] = explode('-', substr($range, 6), 2) + [0];
 
                     $end = ('' === $end) ? $fileSize - 1 : (int) $end;
 
@@ -269,10 +250,6 @@ class BinaryFileResponse extends Response
             }
         }
 
-        if ($request->isMethod('HEAD')) {
-            $this->maxlen = 0;
-        }
-
         return $this;
     }
 
@@ -289,57 +266,37 @@ class BinaryFileResponse extends Response
         return $lastModified->format('D, d M Y H:i:s').' GMT' === $header;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function sendContent(): static
     {
-        try {
-            if (!$this->isSuccessful()) {
-                return $this;
-            }
+        if (!$this->isSuccessful()) {
+            return parent::sendContent();
+        }
 
-            if (0 === $this->maxlen) {
-                return $this;
-            }
+        if (0 === $this->maxlen) {
+            return $this;
+        }
 
-            $out = fopen('php://output', 'w');
-            $file = fopen($this->file->getPathname(), 'r');
+        $out = fopen('php://output', 'w');
+        $file = fopen($this->file->getPathname(), 'r');
 
-            ignore_user_abort(true);
+        stream_copy_to_stream($file, $out, $this->maxlen, $this->offset);
 
-            if (0 !== $this->offset) {
-                fseek($file, $this->offset);
-            }
+        fclose($out);
+        fclose($file);
 
-            $length = $this->maxlen;
-            while ($length && !feof($file)) {
-                $read = $length > $this->chunkSize || 0 > $length ? $this->chunkSize : $length;
-
-                if (false === $data = fread($file, $read)) {
-                    break;
-                }
-                while ('' !== $data) {
-                    $read = fwrite($out, $data);
-                    if (false === $read || connection_aborted()) {
-                        break 2;
-                    }
-                    if (0 < $length) {
-                        $length -= $read;
-                    }
-                    $data = substr($data, $read);
-                }
-            }
-
-            fclose($out);
-            fclose($file);
-        } finally {
-            if ($this->deleteFileAfterSend && is_file($this->file->getPathname())) {
-                unlink($this->file->getPathname());
-            }
+        if ($this->deleteFileAfterSend && is_file($this->file->getPathname())) {
+            unlink($this->file->getPathname());
         }
 
         return $this;
     }
 
     /**
+     * {@inheritdoc}
+     *
      * @throws \LogicException when the content is not null
      */
     public function setContent(?string $content): static
@@ -351,6 +308,9 @@ class BinaryFileResponse extends Response
         return $this;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function getContent(): string|false
     {
         return false;
@@ -358,8 +318,6 @@ class BinaryFileResponse extends Response
 
     /**
      * Trust X-Sendfile-Type header.
-     *
-     * @return void
      */
     public static function trustXSendfileTypeHeader()
     {

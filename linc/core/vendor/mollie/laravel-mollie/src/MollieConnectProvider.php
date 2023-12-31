@@ -27,10 +27,8 @@
  * @license     Berkeley Software Distribution License (BSD-License 2) http://www.opensource.org/licenses/bsd-license.php
  * @author      Mollie B.V. <info@mollie.com>
  * @copyright   Mollie B.V.
- *
  * @link        https://www.mollie.com
  */
-
 namespace Mollie\Laravel;
 
 use Illuminate\Support\Arr;
@@ -74,7 +72,8 @@ class MollieConnectProvider extends AbstractProvider implements ProviderInterfac
     /**
      * Get the authentication URL for the provider.
      *
-     * @param  string  $state
+     * @param string $state
+     *
      * @return string
      */
     protected function getAuthUrl($state)
@@ -95,7 +94,8 @@ class MollieConnectProvider extends AbstractProvider implements ProviderInterfac
     /**
      * Get the access token for the given code.
      *
-     * @param  string  $code
+     * @param string $code
+     *
      * @return string
      */
     public function getAccessToken($code)
@@ -111,7 +111,8 @@ class MollieConnectProvider extends AbstractProvider implements ProviderInterfac
     /**
      * Get the access token with a refresh token.
      *
-     * @param  string  $refresh_token
+     * @param string $refresh_token
+     *
      * @return array
      */
     public function getRefreshTokenResponse($refresh_token)
@@ -127,7 +128,8 @@ class MollieConnectProvider extends AbstractProvider implements ProviderInterfac
     /**
      * Get the refresh tokenfields with a refresh token.
      *
-     * @param  string  $refresh_token
+     * @param string $refresh_token
+     *
      * @return array
      */
     protected function getRefreshTokenFields($refresh_token)
@@ -143,7 +145,8 @@ class MollieConnectProvider extends AbstractProvider implements ProviderInterfac
     /**
      * Get the POST fields for the token request.
      *
-     * @param  string  $code
+     * @param string $code
+     *
      * @return array
      */
     public function getTokenFields($code)
@@ -154,7 +157,8 @@ class MollieConnectProvider extends AbstractProvider implements ProviderInterfac
     /**
      * Get the raw user for the given access token.
      *
-     * @param  string  $token
+     * @param string $token
+     *
      * @return array
      */
     protected function getUserByToken($token)
@@ -168,6 +172,8 @@ class MollieConnectProvider extends AbstractProvider implements ProviderInterfac
 
     /**
      * Map the raw user array to a Socialite User instance.
+     *
+     * @param array $user
      *
      * @return \Laravel\Socialite\AbstractUser
      */

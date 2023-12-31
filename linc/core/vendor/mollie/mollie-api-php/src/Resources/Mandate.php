@@ -10,6 +10,11 @@ class Mandate extends BaseResource
     /**
      * @var string
      */
+    public $resource;
+
+    /**
+     * @var string
+     */
     public $id;
 
     /**
@@ -86,7 +91,7 @@ class Mandate extends BaseResource
     /**
      * Revoke the mandate
      *
-     * @return null|\stdClass|\Mollie\Api\Resources\Mandate
+     * @return null
      */
     public function revoke()
     {

@@ -5,6 +5,11 @@ namespace Mollie\Api\Resources;
 class Shipment extends BaseResource
 {
     /**
+     * @var string
+     */
+    public $resource;
+
+    /**
      * The shipment’s unique identifier,
      *
      * @example shp_3wmsgCJN4U

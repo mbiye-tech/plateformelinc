@@ -23,7 +23,6 @@ use Twilio\VersionInfo;
  * @property Api $api
  * @property Autopilot $autopilot
  * @property Chat $chat
- * @property Content $content
  * @property Conversations $conversations
  * @property Events $events
  * @property FlexApi $flexApi
@@ -36,11 +35,9 @@ use Twilio\VersionInfo;
  * @property Monitor $monitor
  * @property Notify $notify
  * @property Numbers $numbers
- * @property Oauth $oauth
  * @property Preview $preview
  * @property Pricing $pricing
  * @property Proxy $proxy
- * @property Routes $routes
  * @property Serverless $serverless
  * @property Studio $studio
  * @property Sync $sync
@@ -53,7 +50,6 @@ use Twilio\VersionInfo;
  * @property Wireless $wireless
  * @property Supersim $supersim
  * @property Bulkexports $bulkexports
- * @property Microvisor $microvisor
  * @property \Twilio\Rest\Api\V2010\AccountInstance $account
  * @property \Twilio\Rest\Api\V2010\Account\AddressList $addresses
  * @property \Twilio\Rest\Api\V2010\Account\ApplicationList $applications
@@ -120,7 +116,6 @@ class Client {
     protected $_api;
     protected $_autopilot;
     protected $_chat;
-    protected $_content;
     protected $_conversations;
     protected $_events;
     protected $_flexApi;
@@ -133,11 +128,9 @@ class Client {
     protected $_monitor;
     protected $_notify;
     protected $_numbers;
-    protected $_oauth;
     protected $_preview;
     protected $_pricing;
     protected $_proxy;
-    protected $_routes;
     protected $_serverless;
     protected $_studio;
     protected $_sync;
@@ -150,7 +143,6 @@ class Client {
     protected $_wireless;
     protected $_supersim;
     protected $_bulkexports;
-    protected $_microvisor;
 
     /**
      * Initializes the Twilio Client
@@ -235,6 +227,10 @@ class Client {
 
         if ($this->userAgentExtensions) {
             $headers['User-Agent'] .= ' ' . implode(' ', $this->userAgentExtensions);
+        }
+
+        if ($method === 'POST' && !\array_key_exists('Content-Type', $headers)) {
+            $headers['Content-Type'] = 'application/x-www-form-urlencoded';
         }
 
         if (!\array_key_exists('Accept', $headers)) {
@@ -680,18 +676,6 @@ class Client {
     }
 
     /**
-     * Access the Content Twilio Domain
-     *
-     * @return Content Content Twilio Domain
-     */
-    protected function getContent(): Content {
-        if (!$this->_content) {
-            $this->_content = new Content($this);
-        }
-        return $this->_content;
-    }
-
-    /**
      * Access the Conversations Twilio Domain
      *
      * @return Conversations Conversations Twilio Domain
@@ -836,18 +820,6 @@ class Client {
     }
 
     /**
-     * Access the Oauth Twilio Domain
-     *
-     * @return Oauth Oauth Twilio Domain
-     */
-    protected function getOauth(): Oauth {
-        if (!$this->_oauth) {
-            $this->_oauth = new Oauth($this);
-        }
-        return $this->_oauth;
-    }
-
-    /**
      * Access the Preview Twilio Domain
      *
      * @return Preview Preview Twilio Domain
@@ -881,18 +853,6 @@ class Client {
             $this->_proxy = new Proxy($this);
         }
         return $this->_proxy;
-    }
-
-    /**
-     * Access the Routes Twilio Domain
-     *
-     * @return Routes Routes Twilio Domain
-     */
-    protected function getRoutes(): Routes {
-        if (!$this->_routes) {
-            $this->_routes = new Routes($this);
-        }
-        return $this->_routes;
     }
 
     /**
@@ -1037,18 +997,6 @@ class Client {
             $this->_bulkexports = new Bulkexports($this);
         }
         return $this->_bulkexports;
-    }
-
-    /**
-     * Access the Microvisor Twilio Domain
-     *
-     * @return Microvisor Microvisor Twilio Domain
-     */
-    protected function getMicrovisor(): Microvisor {
-        if (!$this->_microvisor) {
-            $this->_microvisor = new Microvisor($this);
-        }
-        return $this->_microvisor;
     }
 
     /**

@@ -14,7 +14,6 @@ use Twilio\Values;
 
 abstract class VerificationCheckOptions {
     /**
-     * @param string $code The verification string
      * @param string $to The phone number or email to verify
      * @param string $verificationSid A SID that uniquely identifies the
      *                                Verification Check
@@ -23,14 +22,13 @@ abstract class VerificationCheckOptions {
      * @param string $payee The payee of the associated PSD2 compliant transaction
      * @return CreateVerificationCheckOptions Options builder
      */
-    public static function create(string $code = Values::NONE, string $to = Values::NONE, string $verificationSid = Values::NONE, string $amount = Values::NONE, string $payee = Values::NONE): CreateVerificationCheckOptions {
-        return new CreateVerificationCheckOptions($code, $to, $verificationSid, $amount, $payee);
+    public static function create(string $to = Values::NONE, string $verificationSid = Values::NONE, string $amount = Values::NONE, string $payee = Values::NONE): CreateVerificationCheckOptions {
+        return new CreateVerificationCheckOptions($to, $verificationSid, $amount, $payee);
     }
 }
 
 class CreateVerificationCheckOptions extends Options {
     /**
-     * @param string $code The verification string
      * @param string $to The phone number or email to verify
      * @param string $verificationSid A SID that uniquely identifies the
      *                                Verification Check
@@ -38,23 +36,11 @@ class CreateVerificationCheckOptions extends Options {
      *                       transaction.
      * @param string $payee The payee of the associated PSD2 compliant transaction
      */
-    public function __construct(string $code = Values::NONE, string $to = Values::NONE, string $verificationSid = Values::NONE, string $amount = Values::NONE, string $payee = Values::NONE) {
-        $this->options['code'] = $code;
+    public function __construct(string $to = Values::NONE, string $verificationSid = Values::NONE, string $amount = Values::NONE, string $payee = Values::NONE) {
         $this->options['to'] = $to;
         $this->options['verificationSid'] = $verificationSid;
         $this->options['amount'] = $amount;
         $this->options['payee'] = $payee;
-    }
-
-    /**
-     * The 4-10 character string being verified.
-     *
-     * @param string $code The verification string
-     * @return $this Fluent Builder
-     */
-    public function setCode(string $code): self {
-        $this->options['code'] = $code;
-        return $this;
     }
 
     /**

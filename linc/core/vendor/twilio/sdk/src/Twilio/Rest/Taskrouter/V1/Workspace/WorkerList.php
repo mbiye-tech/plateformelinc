@@ -108,7 +108,6 @@ class WorkerList extends ListResource {
             'TargetWorkersExpression' => $options['targetWorkersExpression'],
             'TaskQueueName' => $options['taskQueueName'],
             'TaskQueueSid' => $options['taskQueueSid'],
-            'Ordering' => $options['ordering'],
             'PageToken' => $pageToken,
             'Page' => $pageNumber,
             'PageSize' => $pageSize,

@@ -43,7 +43,7 @@ class OrganizationPartnerEndpoint extends EndpointAbstract
      * @param string $id
      * @param array $filters
      *
-     * @return mixed
+     * @return \Mollie\Api\Resources\BaseResource
      * @throws \Mollie\Api\Exceptions\ApiException
      */
     protected function rest_read($id, array $filters)

@@ -10,9 +10,7 @@ use Psr\Http\Message\StreamInterface;
 use function gettype;
 use function is_float;
 use function is_numeric;
-use function is_object;
 use function is_scalar;
-use function is_string;
 use function sprintf;
 
 /**
@@ -32,9 +30,11 @@ class Response implements ResponseInterface
     /**
      * Map of standard HTTP status code/reason phrases
      *
+     * @var array
+     *
      * @psalm-var array<positive-int, non-empty-string>
      */
-    private array $phrases = [
+    private $phrases = [
         // INFORMATIONAL CODES
         100 => 'Continue',
         101 => 'Switching Protocols',
@@ -108,15 +108,21 @@ class Response implements ResponseInterface
         599 => 'Network Connect Timeout Error',
     ];
 
-    private string $reasonPhrase;
+    /**
+     * @var string
+     */
+    private $reasonPhrase;
 
-    private int $statusCode;
+    /**
+     * @var int
+     */
+    private $statusCode;
 
     /**
      * @param string|resource|StreamInterface $body Stream identifier and/or actual stream resource
      * @param int $status Status code for the response, if any.
      * @param array $headers Headers for the response, if any.
-     * @throws Exception\InvalidArgumentException On any invalid element.
+     * @throws Exception\InvalidArgumentException on any invalid element.
      */
     public function __construct($body = 'php://memory', int $status = 200, array $headers = [])
     {
@@ -128,7 +134,7 @@ class Response implements ResponseInterface
     /**
      * {@inheritdoc}
      */
-    public function getStatusCode(): int
+    public function getStatusCode() : int
     {
         return $this->statusCode;
     }
@@ -136,7 +142,7 @@ class Response implements ResponseInterface
     /**
      * {@inheritdoc}
      */
-    public function getReasonPhrase(): string
+    public function getReasonPhrase() : string
     {
         return $this->reasonPhrase;
     }
@@ -144,7 +150,7 @@ class Response implements ResponseInterface
     /**
      * {@inheritdoc}
      */
-    public function withStatus($code, $reasonPhrase = ''): Response
+    public function withStatus($code, $reasonPhrase = '') : Response
     {
         $new = clone $this;
         $new->setStatusCode($code, $reasonPhrase);
@@ -156,12 +162,11 @@ class Response implements ResponseInterface
      *
      * @param int $code
      * @param string $reasonPhrase
-     * @throws Exception\InvalidArgumentException On an invalid status code.
+     * @throws Exception\InvalidArgumentException on an invalid status code.
      */
-    private function setStatusCode($code, $reasonPhrase = ''): void
+    private function setStatusCode($code, $reasonPhrase = '') : void
     {
-        if (
-            ! is_numeric($code)
+        if (! is_numeric($code)
             || is_float($code)
             || $code < static::MIN_STATUS_CODE_VALUE
             || $code > static::MAX_STATUS_CODE_VALUE
@@ -177,7 +182,7 @@ class Response implements ResponseInterface
         if (! is_string($reasonPhrase)) {
             throw new Exception\InvalidArgumentException(sprintf(
                 'Unsupported response reason phrase; must be a string, received %s',
-                is_object($reasonPhrase) ? $reasonPhrase::class : gettype($reasonPhrase)
+                is_object($reasonPhrase) ? get_class($reasonPhrase) : gettype($reasonPhrase)
             ));
         }
 
@@ -186,6 +191,6 @@ class Response implements ResponseInterface
         }
 
         $this->reasonPhrase = $reasonPhrase;
-        $this->statusCode   = (int) $code;
+        $this->statusCode = (int) $code;
     }
 }

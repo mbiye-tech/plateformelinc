@@ -11,7 +11,6 @@ namespace Twilio\Rest\Insights\V1;
 
 use Twilio\Exceptions\TwilioException;
 use Twilio\InstanceResource;
-use Twilio\Rest\Insights\V1\Call\AnnotationList;
 use Twilio\Rest\Insights\V1\Call\CallSummaryList;
 use Twilio\Rest\Insights\V1\Call\EventList;
 use Twilio\Rest\Insights\V1\Call\MetricList;
@@ -19,6 +18,8 @@ use Twilio\Values;
 use Twilio\Version;
 
 /**
+ * PLEASE NOTE that this class contains preview products that are subject to change. Use them with caution. If you currently do not have developer preview access, please contact help@twilio.com.
+ *
  * @property string $sid
  * @property string $url
  * @property array $links
@@ -27,7 +28,6 @@ class CallInstance extends InstanceResource {
     protected $_events;
     protected $_metrics;
     protected $_summary;
-    protected $_annotation;
 
     /**
      * Initialize the CallInstance
@@ -92,13 +92,6 @@ class CallInstance extends InstanceResource {
      */
     protected function getSummary(): CallSummaryList {
         return $this->proxy()->summary;
-    }
-
-    /**
-     * Access the annotation
-     */
-    protected function getAnnotation(): AnnotationList {
-        return $this->proxy()->annotation;
     }
 
     /**

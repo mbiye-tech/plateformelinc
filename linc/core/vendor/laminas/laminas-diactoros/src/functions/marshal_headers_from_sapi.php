@@ -6,7 +6,7 @@ namespace Laminas\Diactoros;
 
 use function array_key_exists;
 use function is_string;
-use function str_starts_with;
+use function strpos;
 use function strtolower;
 use function strtr;
 use function substr;
@@ -15,10 +15,10 @@ use function substr;
  * @param array $server Values obtained from the SAPI (generally `$_SERVER`).
  * @return array Header/value pairs
  */
-function marshalHeadersFromSapi(array $server): array
+function marshalHeadersFromSapi(array $server) : array
 {
     $contentHeaderLookup = isset($server['LAMINAS_DIACTOROS_STRICT_CONTENT_HEADER_LOOKUP'])
-        ? static function (string $key): bool {
+        ? static function (string $key) : bool {
             static $contentHeaders = [
                 'CONTENT_TYPE'   => true,
                 'CONTENT_LENGTH' => true,
@@ -26,7 +26,9 @@ function marshalHeadersFromSapi(array $server): array
             ];
             return isset($contentHeaders[$key]);
         }
-        : static fn(string $key): bool => str_starts_with($key, 'CONTENT_');
+        : static function (string $key): bool {
+            return strpos($key, 'CONTENT_') === 0;
+        };
 
     $headers = [];
     foreach ($server as $key => $value) {
@@ -40,7 +42,7 @@ function marshalHeadersFromSapi(array $server): array
 
         // Apache prefixes environment variables with REDIRECT_
         // if they are added by rewrite rules
-        if (str_starts_with($key, 'REDIRECT_')) {
+        if (strpos($key, 'REDIRECT_') === 0) {
             $key = substr($key, 9);
 
             // We will not overwrite existing variables with the
@@ -50,14 +52,14 @@ function marshalHeadersFromSapi(array $server): array
             }
         }
 
-        if (str_starts_with($key, 'HTTP_')) {
-            $name           = strtr(strtolower(substr($key, 5)), '_', '-');
+        if (strpos($key, 'HTTP_') === 0) {
+            $name = strtr(strtolower(substr($key, 5)), '_', '-');
             $headers[$name] = $value;
             continue;
         }
 
         if ($contentHeaderLookup($key)) {
-            $name           = strtr(strtolower($key), '_', '-');
+            $name = strtr(strtolower($key), '_', '-');
             $headers[$name] = $value;
             continue;
         }

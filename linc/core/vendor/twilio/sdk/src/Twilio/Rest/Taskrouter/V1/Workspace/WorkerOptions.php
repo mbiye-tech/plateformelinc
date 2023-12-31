@@ -25,11 +25,10 @@ abstract class WorkerOptions {
      *                              Workers to read are eligible for
      * @param string $taskQueueSid The SID of the TaskQueue that the Workers to
      *                             read are eligible for
-     * @param string $ordering Sorting parameter for Workers
      * @return ReadWorkerOptions Options builder
      */
-    public static function read(string $activityName = Values::NONE, string $activitySid = Values::NONE, string $available = Values::NONE, string $friendlyName = Values::NONE, string $targetWorkersExpression = Values::NONE, string $taskQueueName = Values::NONE, string $taskQueueSid = Values::NONE, string $ordering = Values::NONE): ReadWorkerOptions {
-        return new ReadWorkerOptions($activityName, $activitySid, $available, $friendlyName, $targetWorkersExpression, $taskQueueName, $taskQueueSid, $ordering);
+    public static function read(string $activityName = Values::NONE, string $activitySid = Values::NONE, string $available = Values::NONE, string $friendlyName = Values::NONE, string $targetWorkersExpression = Values::NONE, string $taskQueueName = Values::NONE, string $taskQueueSid = Values::NONE): ReadWorkerOptions {
+        return new ReadWorkerOptions($activityName, $activitySid, $available, $friendlyName, $targetWorkersExpression, $taskQueueName, $taskQueueSid);
     }
 
     /**
@@ -78,9 +77,8 @@ class ReadWorkerOptions extends Options {
      *                              Workers to read are eligible for
      * @param string $taskQueueSid The SID of the TaskQueue that the Workers to
      *                             read are eligible for
-     * @param string $ordering Sorting parameter for Workers
      */
-    public function __construct(string $activityName = Values::NONE, string $activitySid = Values::NONE, string $available = Values::NONE, string $friendlyName = Values::NONE, string $targetWorkersExpression = Values::NONE, string $taskQueueName = Values::NONE, string $taskQueueSid = Values::NONE, string $ordering = Values::NONE) {
+    public function __construct(string $activityName = Values::NONE, string $activitySid = Values::NONE, string $available = Values::NONE, string $friendlyName = Values::NONE, string $targetWorkersExpression = Values::NONE, string $taskQueueName = Values::NONE, string $taskQueueSid = Values::NONE) {
         $this->options['activityName'] = $activityName;
         $this->options['activitySid'] = $activitySid;
         $this->options['available'] = $available;
@@ -88,7 +86,6 @@ class ReadWorkerOptions extends Options {
         $this->options['targetWorkersExpression'] = $targetWorkersExpression;
         $this->options['taskQueueName'] = $taskQueueName;
         $this->options['taskQueueSid'] = $taskQueueSid;
-        $this->options['ordering'] = $ordering;
     }
 
     /**
@@ -169,17 +166,6 @@ class ReadWorkerOptions extends Options {
      */
     public function setTaskQueueSid(string $taskQueueSid): self {
         $this->options['taskQueueSid'] = $taskQueueSid;
-        return $this;
-    }
-
-    /**
-     * Sorting parameter for Workers
-     *
-     * @param string $ordering Sorting parameter for Workers
-     * @return $this Fluent Builder
-     */
-    public function setOrdering(string $ordering): self {
-        $this->options['ordering'] = $ordering;
         return $this;
     }
 

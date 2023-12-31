@@ -17,7 +17,6 @@ use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Exception\ServerException;
 use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Promise\PromiseInterface;
-use Psr\Http\Client\ClientExceptionInterface;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\UriInterface;
@@ -25,7 +24,7 @@ use Psr\Http\Message\UriInterface;
 class Request
 {
     use GuzzleClientTrait;
-
+    
     /**
      * @var string
      */
@@ -69,13 +68,13 @@ class Request
     /**
      * Build a new Http request.
      *
-     * @param array  $auth           [apikey, apisecret]
-     * @param string $method         http method
-     * @param string $url            call url
-     * @param array  $filters        Mailjet resource filters
-     * @param mixed  $body           Mailjet resource body
-     * @param string $type           Request Content-type
-     * @param array  $requestOptions
+     * @param array $auth [apikey, apisecret]
+     * @param string $method http method
+     * @param string $url call url
+     * @param array $filters Mailjet resource filters
+     * @param mixed $body Mailjet resource body
+     * @param string $type Request Content-type
+     * @param array $requestOptions
      */
     public function __construct(
         array $auth,
@@ -96,20 +95,22 @@ class Request
         $this->guzzleClient = new GuzzleClient(
             ['defaults' => [
                 'headers' => [
-                    'user-agent' => Config::USER_AGENT . PHP_VERSION . '/' . Client::WRAPPER_VERSION,
-                ],
-            ],
+                    'user-agent' => Config::USER_AGENT . PHP_VERSION.'/' . Client::WRAPPER_VERSION,
+                    ],
+                ]
             ]
         );
     }
 
     /**
      * Trigger the actual call
+     * TODO: DATA API.
      *
-     * @param  $call
+     * @param $call
+     *
      * @return Response the call response
      */
-    public function call($call): Response
+    public function call($call)
     {
         $payload = [
             'query' => $this->filters,
@@ -124,7 +125,7 @@ class Request
         if ($authArgsCount > 1) {
             $payload['auth'] = $this->auth;
         } else {
-            $headers['Authorization'] = 'Bearer ' . $this->auth[0];
+            $headers['Authorization'] = 'Bearer '.$this->auth[0];
         }
 
         $payload['headers'] = $headers;
@@ -137,8 +138,13 @@ class Request
 
         if ($call) {
             try {
-                $response = call_user_func([$this, strtolower($this->method)], $this->url, $payload);
-            } catch (ClientException|ServerException $e) {
+                $response = \call_user_func_array(
+                    [$this, strtolower($this->method)],
+                    [$this->url, $payload]
+                );
+            } catch (ClientException $e) {
+                $response = $e->getResponse();
+            } catch (ServerException $e) {
                 $response = $e->getResponse();
             }
         }
@@ -197,9 +203,10 @@ class Request
     }
 
     /**
-     * @param  RequestInterface $request Request to send
-     * @param  array            $options Request options to apply to the given
-     *                                   request and to the transfer.
+     * @param RequestInterface $request Request to send
+     * @param array            $options Request options to apply to the given
+     *                                  request and to the transfer.
+     *
      * @throws GuzzleException
      */
     public function send(RequestInterface $request, array $options = []): ResponseInterface
@@ -208,9 +215,11 @@ class Request
     }
 
     /**
-     * @param  RequestInterface $request
+     * @param RequestInterface $request
+     *
      * @return ResponseInterface
-     * @throws ClientExceptionInterface
+     *
+     * @throws \Psr\Http\Client\ClientExceptionInterface
      */
     public function sendRequest(RequestInterface $request): ResponseInterface
     {
@@ -224,13 +233,14 @@ class Request
      */
     public function sendAsync(RequestInterface $request, array $options = []): PromiseInterface
     {
-        return $this->guzzleClient->sendAsync($request, $options);
+        return $this->guzzleClient->sendAsync($request,$options);
     }
 
     /**
-     * @param  string              $method  HTTP method.
-     * @param  string|UriInterface $uri     URI object or string.
-     * @param  array               $options Request options to apply.
+     * @param string              $method  HTTP method.
+     * @param string|UriInterface $uri     URI object or string.
+     * @param array               $options Request options to apply.
+     *
      * @throws GuzzleException
      */
     public function request(string $method, $uri, array $options = []): ResponseInterface

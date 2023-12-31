@@ -104,7 +104,6 @@ class TaskQueueList extends ListResource {
             'FriendlyName' => $options['friendlyName'],
             'EvaluateWorkerAttributes' => $options['evaluateWorkerAttributes'],
             'WorkerSid' => $options['workerSid'],
-            'Ordering' => $options['ordering'],
             'PageToken' => $pageToken,
             'Page' => $pageNumber,
             'PageSize' => $pageSize,

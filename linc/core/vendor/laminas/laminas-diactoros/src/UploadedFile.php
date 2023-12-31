@@ -9,16 +9,16 @@ use Psr\Http\Message\UploadedFileInterface;
 
 use function dirname;
 use function fclose;
-use function file_exists;
 use function fopen;
 use function fwrite;
 use function is_dir;
+use function is_int;
 use function is_resource;
 use function is_string;
 use function is_writable;
 use function move_uploaded_file;
-use function str_starts_with;
-use function unlink;
+use function sprintf;
+use function strpos;
 
 use const PHP_SAPI;
 use const UPLOAD_ERR_CANT_WRITE;
@@ -44,25 +44,55 @@ class UploadedFile implements UploadedFileInterface
         UPLOAD_ERR_EXTENSION  => 'A PHP extension stopped the file upload.',
     ];
 
-    private int $error;
+    /**
+     * @var string|null
+     */
+    private $clientFilename;
 
-    private ?string $file = null;
+    /**
+     * @var string|null
+     */
+    private $clientMediaType;
 
-    private bool $moved = false;
+    /**
+     * @var int
+     */
+    private $error;
 
-    /** @var null|StreamInterface */
+    /**
+     * @var null|string
+     */
+    private $file;
+
+    /**
+     * @var bool
+     */
+    private $moved = false;
+
+    /**
+     * @var int
+     */
+    private $size;
+
+    /**
+     * @var null|StreamInterface
+     */
     private $stream;
 
     /**
      * @param string|resource|StreamInterface $streamOrFile
+     * @param int $size
+     * @param int $errorStatus
+     * @param string|null $clientFilename
+     * @param string|null $clientMediaType
      * @throws Exception\InvalidArgumentException
      */
     public function __construct(
         $streamOrFile,
-        private int $size,
+        int $size,
         int $errorStatus,
-        private ?string $clientFilename = null,
-        private ?string $clientMediaType = null
+        string $clientFilename = null,
+        string $clientMediaType = null
     ) {
         if ($errorStatus === UPLOAD_ERR_OK) {
             if (is_string($streamOrFile)) {
@@ -80,20 +110,25 @@ class UploadedFile implements UploadedFileInterface
             }
         }
 
+        $this->size = $size;
+
         if (0 > $errorStatus || 8 < $errorStatus) {
             throw new Exception\InvalidArgumentException(
                 'Invalid error status for UploadedFile; must be an UPLOAD_ERR_* constant'
             );
         }
         $this->error = $errorStatus;
+
+        $this->clientFilename = $clientFilename;
+        $this->clientMediaType = $clientMediaType;
     }
 
     /**
      * {@inheritdoc}
-     *
-     * @throws Exception\UploadedFileAlreadyMovedException If the upload was not successful.
+     * @throws Exception\UploadedFileAlreadyMovedException if the upload was
+     *     not successful.
      */
-    public function getStream(): StreamInterface
+    public function getStream() : StreamInterface
     {
         if ($this->error !== UPLOAD_ERR_OK) {
             throw Exception\UploadedFileErrorException::dueToStreamUploadError(
@@ -118,14 +153,13 @@ class UploadedFile implements UploadedFileInterface
      *
      * @see http://php.net/is_uploaded_file
      * @see http://php.net/move_uploaded_file
-     *
      * @param string $targetPath Path to which to move the uploaded file.
-     * @throws Exception\UploadedFileErrorException If the upload was not successful.
-     * @throws Exception\InvalidArgumentException If the $path specified is invalid.
-     * @throws Exception\UploadedFileErrorException On any error during the
+     * @throws Exception\UploadedFileErrorException if the upload was not successful.
+     * @throws Exception\InvalidArgumentException if the $path specified is invalid.
+     * @throws Exception\UploadedFileErrorException on any error during the
      *     move operation, or on the second or subsequent call to the method.
      */
-    public function moveTo($targetPath): void
+    public function moveTo($targetPath) : void
     {
         if ($this->moved) {
             throw new Exception\UploadedFileAlreadyMovedException('Cannot move file; already moved!');
@@ -150,16 +184,9 @@ class UploadedFile implements UploadedFileInterface
 
         $sapi = PHP_SAPI;
         switch (true) {
-            case empty($sapi) || str_starts_with($sapi, 'cli') || str_starts_with($sapi, 'phpdbg') || ! $this->file:
+            case (empty($sapi) || 0 === strpos($sapi, 'cli') || 0 === strpos($sapi, 'phpdbg') || ! $this->file):
                 // Non-SAPI environment, or no filename present
                 $this->writeFile($targetPath);
-
-                if ($this->stream instanceof StreamInterface) {
-                    $this->stream->close();
-                }
-                if (is_string($this->file) && file_exists($this->file)) {
-                    unlink($this->file);
-                }
                 break;
             default:
                 // SAPI environment, with file present
@@ -177,7 +204,7 @@ class UploadedFile implements UploadedFileInterface
      *
      * @return int|null The file size in bytes or null if unknown.
      */
-    public function getSize(): ?int
+    public function getSize() : ?int
     {
         return $this->size;
     }
@@ -186,10 +213,9 @@ class UploadedFile implements UploadedFileInterface
      * {@inheritdoc}
      *
      * @see http://php.net/manual/en/features.file-upload.errors.php
-     *
      * @return int One of PHP's UPLOAD_ERR_XXX constants.
      */
-    public function getError(): int
+    public function getError() : int
     {
         return $this->error;
     }
@@ -200,7 +226,7 @@ class UploadedFile implements UploadedFileInterface
      * @return string|null The filename sent by the client or null if none
      *     was provided.
      */
-    public function getClientFilename(): ?string
+    public function getClientFilename() : ?string
     {
         return $this->clientFilename;
     }
@@ -208,15 +234,17 @@ class UploadedFile implements UploadedFileInterface
     /**
      * {@inheritdoc}
      */
-    public function getClientMediaType(): ?string
+    public function getClientMediaType() : ?string
     {
         return $this->clientMediaType;
     }
 
     /**
      * Write internal stream to given path
+     *
+     * @param string $path
      */
-    private function writeFile(string $path): void
+    private function writeFile(string $path) : void
     {
         $handle = fopen($path, 'wb+');
         if (false === $handle) {

@@ -24,11 +24,8 @@ use Symfony\Component\Mailer\Exception\TransportException;
  */
 abstract class AbstractStream
 {
-    /** @var resource|null */
     protected $stream;
-    /** @var resource|null */
     protected $in;
-    /** @var resource|null */
     protected $out;
 
     private string $debug = '';
@@ -78,7 +75,7 @@ abstract class AbstractStream
         }
 
         $line = fgets($this->out);
-        if ('' === $line || false === $line) {
+        if (0 === \strlen($line)) {
             $metas = stream_get_meta_data($this->out);
             if ($metas['timed_out']) {
                 throw new TransportException(sprintf('Connection to "%s" timed out.', $this->getReadConnectionDescription()));

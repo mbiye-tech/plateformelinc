@@ -83,6 +83,9 @@ final class PseudoLocalizationTranslator implements TranslatorInterface
         $this->localizableHTMLAttributes = $options['localizable_html_attributes'] ?? [];
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function trans(string $id, array $parameters = [], string $domain = null, string $locale = null): string
     {
         $trans = '';
@@ -280,7 +283,7 @@ final class PseudoLocalizationTranslator implements TranslatorInterface
         }
 
         $visibleLength = $this->strlen($visibleText);
-        $missingLength = (int) ceil($visibleLength * $this->expansionFactor) - $visibleLength;
+        $missingLength = (int) (ceil($visibleLength * $this->expansionFactor)) - $visibleLength;
         if ($this->brackets) {
             $missingLength -= 2;
         }
